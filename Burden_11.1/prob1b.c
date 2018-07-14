@@ -48,7 +48,7 @@ int main() {
 	systemfunc equations1[n]={f0,f1};
 	systemfunc equations2[n]={f0,f2};
 	
-	h=0.5;
+	h=0.25;
 
 	i=0;
 	yp1[0] = y1[0];
