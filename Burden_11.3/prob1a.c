@@ -3,6 +3,10 @@
 #include <math.h>
 
 #define n 3
+#define x0 0
+#define x1 1 
+#define y0 0
+#define y1 2
 
 double p (double x) {
 	return (0);
@@ -31,56 +35,36 @@ void print(double **matrix, int row, int col){
 	}
 	printf("\n");
 }
-double **creatematrix (double **matrix, int row, int col, int *x, int h) {
-    int i;
 
-    for(i=0; i<row; i++) {	
-		if(i==0) {
-			matrix[i][i] = 2 + pow(h,2)* q(x[i+1]);
-			matrix[i][i+1] = - 1 + (h/2.)* p(x[i+1]);
-		}
-		else {
-            if(i==n-1) {
-            	matrix[i][i-1] = - 1 - (h/2.)* p(x[i+1]);
-                matrix[i][i] = 2 + pow(h, 2)* q(x[i+1]);
-            }
-            else {
-            	matrix[i][i-1] = - 1 - (h/2.)* p(x[i+1]);
-                matrix[i][i] = 2 + pow(h, 2)* q(x[i+1]);
-                matrix[i][i+1] = - 1 + (h/2.)* p(x[i+1]);
-            }
-		}
-	}
-	matrix[0][n] = -pow(h,2)*r(x[1]) + (1+(h/2.)*p(x[1]))*y(x[0]);
-    matrix[n-1][n] = -pow(h,2)*r(x[n]) + (1-(h/2.)*p(x[n]))*y(x[n+1]);
-}
-
-double jacobi(double **matrix, int row, int col, double *x1, double *x2) {
-
-	int i,j;
-	double sum, s1, s2, error;
-
-	for(i=0; i<row; i++) {	
-		sum = 0;
-		
-		for(j=0; j<col-1; j++) {	
-			if( j!= i )
-				sum += -matrix[i][j]*x1[j];
-		}
-
-		x2[i] = (sum + matrix[i][col-1])/ matrix[i][i];
-	}
-
-	for(i=0; i<row; i++) {	
-
-		s1 += pow(x2[i]-x1[i], 2);
-		s2 += pow(x2[i], 2);
+double **creatematrix (double **matrix, double x, int h) {
+    int i, j;
 	
+	for(i=0;i<n;i++) {
+		for(j=0;j<(n+1);j++)
+			matrix[i][j] = 0;
+    }
+	matrix[0][n] = -1*pow(h,2)*r(x) + (1+(h/2)*p(x))*y0;
+	x+=h; 
+	for(i=1;i<n-1;i++) {
+		matrix[i][n] = -1*pow(h,2)*r(x);
+
+		for(j=1;j<(n+1);j++) {
+        	if(i==j) {
+				matrix[i][i] = 2 + pow(h,2)*q(x);
+				matrix[i][i-1] = -1 - (h/2.0)*p(x);
+				matrix[i][i+1] = -1 + (h/2.0)*p(x);
+				
+			}	
+		}
+		x+=h;
 	}
+	matrix[0][0] = 2 + pow(h,2)*q(x);
+	matrix[0][1] = -1 + (h/2.0)*p(x);
+	matrix[n-1][n-1] = 2 + pow(h,2)*q(x);
+	matrix[n-1][n-2] = -1 - (h/2.0)*p(x);
+	matrix[n-1][n] = -1*pow(h,2)*r(x) + (1 - (h/2.0)*p(x))*y1;
 	
-	error = sqrt(s1)/sqrt(s2);
-	
-	return error;
+    return matrix;
 }
 
 void exchangelines (double *line1, double *line2, int row) {
@@ -137,9 +121,9 @@ double *reversesub (double **matrix, const int dim) {
 }
 
 int main() {
-	int i, j, row = n, col = n+1;
-    double h = 0.5, x[n+2], w[n+2], x0, x1, y0, y1;
-    double **matrix;
+	int i, j, row = n, col = n+1, steps;
+    double h = 0.5, x[n+2];
+    double **matrix, *roots;
 
     matrix = malloc(row* sizeof(double*));
 	for( i = 0; i < col; i++ )
@@ -151,4 +135,12 @@ int main() {
 		x[i] = x0 + i*h;
     x[n+1] = x1;
 
+    creatematrix(matrix,x0+h,h);
+    print(matrix,row,col);
+    steps = uppertriangular(matrix,row,col);
+    print(matrix,row,col);
+    roots = reversesub(matrix,row);
+
+    for(i=0;i<n;i++)	
+        printf("%lf\t", roots[i]);
 }
