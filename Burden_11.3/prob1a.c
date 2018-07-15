@@ -36,33 +36,26 @@ void print(double **matrix, int row, int col){
 	printf("\n");
 }
 
-double **creatematrix (double **matrix, double x, int h) {
+double **creatematrix (double **matrix, double x[], int h) {
     int i, j;
 	
 	for(i=0;i<n;i++) {
 		for(j=0;j<(n+1);j++)
 			matrix[i][j] = 0;
     }
-	matrix[0][n] = -1*pow(h,2)*r(x) + (1+(h/2)*p(x))*y0;
-	x+=h; 
-	for(i=1;i<n-1;i++) {
-		matrix[i][n] = -1*pow(h,2)*r(x);
 
-		for(j=1;j<(n+1);j++) {
-        	if(i==j) {
-				matrix[i][i] = 2 + pow(h,2)*q(x);
-				matrix[i][i-1] = -1 - (h/2.0)*p(x);
-				matrix[i][i+1] = -1 + (h/2.0)*p(x);
-				
-			}	
-		}
-		x+=h;
+	for(i=1;i<n-1;i++) {
+		matrix[i][n] = -1*pow(h,2)*r(x[i+1]);
+		matrix[i][i] = 2 + pow(h,2)*q(x[i+1]);
+		matrix[i][i-1] = -1 - (h/2.0)*p(x[i+1]);
+		matrix[i][i+1] = -1 + (h/2.0)*p(x[i+1]);		
 	}
-	matrix[0][0] = 2 + pow(h,2)*q(x);
-	matrix[0][1] = -1 + (h/2.0)*p(x);
-	matrix[n-1][n-1] = 2 + pow(h,2)*q(x);
-	matrix[n-1][n-2] = -1 - (h/2.0)*p(x);
-	matrix[n-1][n] = -1*pow(h,2)*r(x) + (1 - (h/2.0)*p(x))*y1;
+	matrix[0][0] = 2 + pow(h,2)*q(x[1]);
+	matrix[0][1] = -1 + (h/2.0)*p(x[1]);
+    matrix[0][n] = -1*pow(h,2)*r(x[2]) + (1+(h/2)*p(x[1]))*y0;
+	matrix[n-1][n-1] = 2 + pow(h,2)*q(x[1]);
+	matrix[n-1][n-2] = -1 -(h/2.0)*p(x[n]);
+	matrix[n-1][n] = -1*pow(h,2)*r(x[n]) + (1 - (h/2.0)*p(x[n]))*y1;
 	
     return matrix;
 }
@@ -135,7 +128,7 @@ int main() {
 		x[i] = x0 + i*h;
     x[n+1] = x1;
 
-    creatematrix(matrix,x0+h,h);
+    creatematrix(matrix,x,h);
     print(matrix,row,col);
     steps = uppertriangular(matrix,row,col);
     print(matrix,row,col);
