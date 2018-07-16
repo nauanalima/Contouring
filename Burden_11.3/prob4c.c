@@ -2,26 +2,26 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define n 3
-#define x0 0
-#define x1 1 
-#define y0 0
-#define y1 2
+#define n 19
+#define x0 1
+#define x1 2
+#define y0 1/2
+#define y1 log(2)
 
 double p (double x) {
-	return (0);
+	return (-4/x);
 }
 
 double q (double x) {
-	return (4);
+	return (2/pow(x,2));
 }
 
 double r (double x) {
-	return (-4*x);
+	return (-2*log(x)/pow(x,2));
 }
 
 double y (double x) {
-    return (exp(2)*(exp(2*x)-exp(-2*x))/(exp(4)-1)+x);
+    return (4/x-2/pow(x,2)+log(x)-3/2);
 }
 
 void print(double **matrix, int row, int col){
@@ -115,11 +115,11 @@ double *reversesub (double **matrix, const int dim) {
 
 int main() {
 	int i, j, row = n, col = n+1, steps;
-    double h = 0.5, x[n+2], X = x0;
+    double h = 0.05, x[n+2], X = x0;
     double **matrix, *roots;
 
 	FILE *f;
-	f = fopen("prob1a.dat", "w+");
+	f = fopen("prob4c.dat", "w+");
 
     matrix = malloc(row* sizeof(double*));
 	for( i = 0; i < col; i++ )

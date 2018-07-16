@@ -115,11 +115,11 @@ double *reversesub (double **matrix, const int dim) {
 
 int main() {
 	int i, j, row = n, col = n+1, steps;
-    double h = 0.5, x[n+2], X = x0;
+    double h = 0.25, x[n+2], X = x0;
     double **matrix, *roots;
 
 	FILE *f;
-	f = fopen("prob1a.dat", "w+");
+	f = fopen("prob1b.dat", "w+");
 
     matrix = malloc(row* sizeof(double*));
 	for( i = 0; i < col; i++ )
