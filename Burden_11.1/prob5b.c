@@ -27,26 +27,35 @@ double shooting (systemfunc func[], double x, double *y) {
 	
 	for(i=0; i<n; i++) {
 		k1[i] = func[i](x,y);
+	}
+	for(i=0; i<n; i++) {
 		temp[i] = y[i]+h*k1[i]/2.;
 	}
 	for(i=0; i<n; i++) {
 		k2[i] = func[i](x+h/2.,temp);
+	}
+	for(i=0; i<n; i++) {
 		temp[i] = y[i]+h*k2[i]/2.;
 	}
 	for(i=0; i<n; i++) {
 		k3[i] = func[i](x+h/2.,temp);
+	}
+	for(i=0; i<n; i++) {
 		temp[i] = y[i]+h*k3[i];
 	}
 	for(i=0; i<n; i++) {
 		k4[i] = func[i](x+h,temp);	
+	}
+	for(i=0; i<n; i++) {
 		y[i] += (k1[i]+2*k2[i]+2*k3[i]+k4[i])*h/6.;
 	}
+	return (y[0]);
 }
 
 int main() {
 	int i;
-	double x, y, y1b, y2b, b = 2;
-	double y1[n]={0,0}, y2[n]={0,1};
+	double x, y, y1b, y2b, b = exp(1e-10);
+	double y1[n]={1,0}, y2[n]={0,1};
 	double yp1[np+1], yp2[np+1];
 	systemfunc equations1[n]={f0,f1};
 	systemfunc equations2[n]={f0,f2};

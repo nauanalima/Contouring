@@ -27,18 +27,26 @@ double shooting (systemfunc func[], double x, double *y) {
 	
 	for(i=0; i<n; i++) {
 		k1[i] = func[i](x,y);
+	}
+	for(i=0; i<n; i++) {
 		temp[i] = y[i]+h*k1[i]/2.;
 	}
 	for(i=0; i<n; i++) {
 		k2[i] = func[i](x+h/2.,temp);
+	}
+	for(i=0; i<n; i++) {
 		temp[i] = y[i]+h*k2[i]/2.;
 	}
 	for(i=0; i<n; i++) {
 		k3[i] = func[i](x+h/2.,temp);
+	}
+	for(i=0; i<n; i++) {
 		temp[i] = y[i]+h*k3[i];
 	}
 	for(i=0; i<n; i++) {
 		k4[i] = func[i](x+h,temp);	
+	}
+	for(i=0; i<n; i++) {
 		y[i] += (k1[i]+2*k2[i]+2*k3[i]+k4[i])*h/6.;
 	}
 }
